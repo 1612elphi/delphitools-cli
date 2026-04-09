@@ -281,68 +281,6 @@ function format_output(colours, format):
   if format == "png":  render colour swatches to image
 ```
 
-### gradient-genny
-
-Generate linear or mesh gradients, output as CSS or PNG.
-
-```
-delphi gradient linear --angle 135 --stops "#ff0000@0,#0000ff@100" --format css
-  -> background: linear-gradient(135deg, #ff0000 0%, #0000ff 100%);
-
-delphi gradient linear --angle 90 --stops "#ff0000@0,#0000ff@100" --pigment --format css
-  -> background: linear-gradient(90deg, #ff0000 0%, #7a3a6b 25%, #5555aa 50%, ...);
-
-delphi gradient corner --tl "#ff0000" --tr "#00ff00" --bl "#0000ff" --br "#ffff00" --format png -o grad.png
-  -> grad.png (bilinear interpolation)
-
-delphi gradient mesh --grid 3x3 --colours "#f00,#0f0,#00f,#ff0,#f0f,#0ff,#fff,#000,#888" --format png --size 800x600
-  -> mesh.png (inverse distance weighted blending)
-```
-
-```pseudo
-if mode == "linear":
-  stops = parse_stops(input)  # [{colour, position}, ...]
-  if pigment:
-    # insert intermediate stops using OKLab interpolation
-    new_stops = []
-    for i in 0..stops.length-1:
-      new_stops.append(stops[i])
-      for t in [0.25, 0.5, 0.75]:
-        blended = lerp_oklab(stops[i].colour, stops[i+1].colour, t)
-        pos = lerp(stops[i].pos, stops[i+1].pos, t)
-        new_stops.append({blended, pos})
-    stops = new_stops
-  if format == "css":
-    print("linear-gradient({angle}deg, " + stops.map("{c} {p}%").join(", ") + ")")
-  if format == "png":
-    for each pixel x:
-      t = x / width
-      colour = interpolate_stops(stops, t)
-      draw(x, colour)
-
-elif mode == "corner":
-  # bilinear interpolation of 4 corner colours
-  for each pixel (x, y):
-    u = x / width
-    v = y / height
-    top = lerp_oklab(tl, tr, u)
-    bot = lerp_oklab(bl, br, u)
-    pixel = lerp_oklab(top, bot, v)
-
-elif mode == "mesh":
-  # inverse distance weighting from grid points
-  points = place_grid(grid_size, colours)  # e.g. 3x3 = 9 points
-  for each pixel (x, y):
-    weights = []
-    for p in points:
-      d = distance((x,y), p.pos)
-      w = 1 / (d^2 + 0.01)
-      weights.append((w, p.colour))
-    pixel = weighted_average_oklab(weights)
-
-write(canvas, output)
-```
-
 ### palette-collection — SKIP
 
 Static curated list of ~150 palettes. In the web app this links into palette-genny.
@@ -777,41 +715,6 @@ for sig in signatures:
   if duplex: add_back_sheet(sheet, sig)
 write_pdf(sheets, output)
 ```
-
-### guillotine-director
-
-Generate a guillotine cut plan for imposed print sheets.
-
-```
-delphi guillotine --sheet 297x420 --grid 2x4 --bleed 3mm
-  -> Cut 1: horizontal at 210mm (top half / bottom half)
-  -> Cut 2: vertical at 148.5mm on top stack
-  -> Cut 3: vertical at 148.5mm on bottom stack
-  -> ...
-  -> 8 pieces, each 105 × 148.5mm
-```
-
-```pseudo
-sheet = parse_dimensions(sheet_size)
-cols, rows = grid
-piece_w = sheet.w / cols
-piece_h = sheet.h / rows
-cuts = []
-# recursive halving strategy (minimise cuts, stack-safe)
-function plan_cuts(region, target_w, target_h):
-  if region.w > target_w:
-    mid = region.w / 2
-    cuts.append({axis: "vertical", pos: mid, region})
-    plan_cuts(left_half, target_w, target_h)
-    plan_cuts(right_half, target_w, target_h)
-  elif region.h > target_h:
-    mid = region.h / 2
-    cuts.append({axis: "horizontal", pos: mid, region})
-    plan_cuts(top_half, target_w, target_h)
-    plan_cuts(bottom_half, target_w, target_h)
-plan_cuts(sheet, piece_w, piece_h)
-for cut in cuts:
-  print(cut.step, cut.axis, "at", cut.pos, "mm")
 
 ---
 
