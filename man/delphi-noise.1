@@ -1,0 +1,25 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-NOISE 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+noise \- Add colour noise overlay to artwork
+.SH SYNOPSIS
+\fBnoise\fR [\fB\-\-opacity\fR] [\fB\-\-scale\fR] [\fB\-\-seed\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIIMAGES\fR] 
+.SH DESCRIPTION
+Add colour noise overlay to artwork
+.SH OPTIONS
+.TP
+\fB\-\-opacity\fR \fI<OPACITY>\fR [default: 0.15]
+Opacity 0.0 – 1.0
+.TP
+\fB\-\-scale\fR \fI<SCALE>\fR [default: 1.0]
+Noise scale (1.0 = 1px grain)
+.TP
+\fB\-\-seed\fR \fI<SEED>\fR
+Random seed (default: random)
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+[\fIIMAGES\fR]
+

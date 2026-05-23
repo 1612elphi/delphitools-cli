@@ -1,0 +1,25 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-GLYPH 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+glyph \- Look up Unicode characters by codepoint, name, range, or search term
+.SH SYNOPSIS
+\fBglyph\fR [\fB\-\-range\fR] [\fB\-\-search\fR] [\fB\-\-limit\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIINPUT\fR] 
+.SH DESCRIPTION
+Look up Unicode characters by codepoint, name, range, or search term
+.SH OPTIONS
+.TP
+\fB\-\-range\fR \fI<RANGE>\fR
+Named Unicode block/range (e.g. arrows, latin, greek)
+.TP
+\fB\-\-search\fR \fI<SEARCH>\fR
+Search Unicode names matching this query
+.TP
+\fB\-\-limit\fR \fI<LIMIT>\fR [default: 50]
+Limit number of search results
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+[\fIINPUT\fR]
+A codepoint (U+0041 or 0x41) or a single character

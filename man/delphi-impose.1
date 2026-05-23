@@ -1,0 +1,43 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-IMPOSE 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+impose \- Impose a PDF for booklet/saddle\-stitch/n\-up printing
+.SH SYNOPSIS
+\fBimpose\fR [\fB\-\-layout\fR] [\fB\-\-paper\fR] [\fB\-\-n\-up\fR] [\fB\-\-signature\fR] [\fB\-\-margins\fR] [\fB\-\-gutter\fR] [\fB\-\-creep\fR] [\fB\-\-crop\-marks\fR] [\fB\-\-duplex\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIPDF\fR> 
+.SH DESCRIPTION
+Impose a PDF for booklet/saddle\-stitch/n\-up printing
+.SH OPTIONS
+.TP
+\fB\-\-layout\fR \fI<LAYOUT>\fR [default: saddle\-stitch]
+Layout: saddle\-stitch, perfect\-bind, n\-up
+.TP
+\fB\-\-paper\fR \fI<PAPER>\fR [default: a4]
+Output paper size
+.TP
+\fB\-\-n\-up\fR \fI<N_UP>\fR [default: 4]
+Pages per sheet (for n\-up; default 4)
+.TP
+\fB\-\-signature\fR \fI<SIGNATURE>\fR [default: 16]
+Pages per signature (for perfect\-bind; default 16)
+.TP
+\fB\-\-margins\fR \fI<MARGINS>\fR [default: 10]
+Margin in mm
+.TP
+\fB\-\-gutter\fR \fI<GUTTER>\fR [default: 5]
+Gutter in mm
+.TP
+\fB\-\-creep\fR \fI<CREEP>\fR [default: 0]
+Creep compensation in mm
+.TP
+\fB\-\-crop\-marks\fR
+Draw crop marks
+.TP
+\fB\-\-duplex\fR
+Add duplex back\-sheet pages
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fIPDF\fR>
+

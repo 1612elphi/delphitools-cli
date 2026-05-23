@@ -1,0 +1,22 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-COLOUR 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+colour \- Convert a colour between formats
+.SH SYNOPSIS
+\fBcolour\fR [\fB\-p\fR|\fB\-\-pretty\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fICOLOUR\fR> [\fIFORMATS\fR] 
+.SH DESCRIPTION
+Convert a colour between formats
+.SH OPTIONS
+.TP
+\fB\-p\fR, \fB\-\-pretty\fR
+Show a pretty colour card
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fICOLOUR\fR>
+Colour to convert (hex, rgb, hsl, oklch, oklab, or name)
+.TP
+[\fIFORMATS\fR]
+Target formats (hex, rgb, hsl, oklch, oklab, lab). Shows all if omitted

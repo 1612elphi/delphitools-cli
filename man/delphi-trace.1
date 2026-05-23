@@ -1,0 +1,25 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-TRACE 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+trace \- Trace raster images to SVG vectors
+.SH SYNOPSIS
+\fBtrace\fR [\fB\-\-preset\fR] [\fB\-\-colours\fR] [\fB\-\-blur\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIIMAGE\fR> 
+.SH DESCRIPTION
+Trace raster images to SVG vectors
+.SH OPTIONS
+.TP
+\fB\-\-preset\fR \fI<PRESET>\fR [default: default]
+Preset: default, detailed, posterize
+.TP
+\fB\-\-colours\fR \fI<COLOURS>\fR
+Number of colours (overrides preset)
+.TP
+\fB\-\-blur\fR \fI<BLUR>\fR [default: 0]
+Pre\-blur radius
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fIIMAGE\fR>
+

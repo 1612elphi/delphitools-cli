@@ -1,0 +1,25 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-SCROLL 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+scroll \- Split a wide image into carousel tiles for Instagram
+.SH SYNOPSIS
+\fBscroll\fR [\fB\-\-ratio\fR] [\fB\-\-fill\fR] [\fB\-\-colour\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIIMAGE\fR> 
+.SH DESCRIPTION
+Split a wide image into carousel tiles for Instagram
+.SH OPTIONS
+.TP
+\fB\-\-ratio\fR \fI<RATIO>\fR [default: 4:5]
+
+.TP
+\fB\-\-fill\fR \fI<FILL>\fR [default: blur]
+Fill mode for letterbox space: blur, colour
+.TP
+\fB\-\-colour\fR \fI<COLOUR>\fR [default: #ffffff]
+
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fIIMAGE\fR>
+

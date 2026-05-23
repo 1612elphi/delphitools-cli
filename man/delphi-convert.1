@@ -1,0 +1,25 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-CONVERT 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+convert \- Convert images between formats (with optional resize)
+.SH SYNOPSIS
+\fBconvert\fR <\fB\-\-to\fR> [\fB\-\-quality\fR] [\fB\-\-resize\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIIMAGES\fR] 
+.SH DESCRIPTION
+Convert images between formats (with optional resize)
+.SH OPTIONS
+.TP
+\fB\-\-to\fR \fI<TO>\fR
+Target format: png, jpeg, jpg, webp, gif, tiff, bmp, ico
+.TP
+\fB\-\-quality\fR \fI<QUALITY>\fR [default: 85]
+JPEG/WebP quality (1–100, default 85)
+.TP
+\fB\-\-resize\fR \fI<RESIZE>\fR
+Resize: "WxH", "Wx", "xH", or "P%" (e.g. 800x600, 50%)
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+[\fIIMAGES\fR]
+

@@ -1,0 +1,22 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-REGEX 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+regex \- Test a regex pattern against text
+.SH SYNOPSIS
+\fBregex\fR [\fB\-\-flags\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIPATTERN\fR> [\fITEXT\fR] 
+.SH DESCRIPTION
+Test a regex pattern against text
+.SH OPTIONS
+.TP
+\fB\-\-flags\fR \fI<FLAGS>\fR [default: g]
+Flags: g (find all), i (case\-insensitive), m (multi\-line), s (dot\-all), x (extended)
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fIPATTERN\fR>
+Regex pattern (Rust regex syntax)
+.TP
+[\fITEXT\fR]
+Text to match (or path / stdin)

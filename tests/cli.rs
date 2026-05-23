@@ -203,13 +203,87 @@ fn version_flag() {
     assert!(out.contains("0.1.0"));
 }
 
-// --- no args shows help ---
+// --- no args shows the tasting menu, `?` and `help` show full help ---
 
 #[test]
-fn no_args_exits_with_help() {
-    let (_, err, code) = delphi(&[]);
-    assert_eq!(code, 2); // clap exits 2 for usage errors
-    assert!(err.contains("Usage") || err.contains("delphi"));
+fn no_args_shows_sampler() {
+    let (out, _, code) = delphi(&[]);
+    assert_eq!(code, 0);
+    assert!(out.contains("delphitools"));
+    // Hint to `delphi ?` for the full list should appear
+    assert!(out.contains("delphi ?"));
+    // Exactly eight tool lines — bracketed by blank lines, hard to count cleanly,
+    // so just sanity-check we're seeing tool entries with descriptions.
+    assert!(out.lines().filter(|l| l.starts_with("  ")).count() >= 8);
+}
+
+#[test]
+fn question_mark_shows_full_command_list() {
+    let (out, _, code) = delphi(&["?"]);
+    assert_eq!(code, 0);
+    assert!(out.contains("Usage:"));
+    // Several tools that should always be in the full list
+    assert!(out.contains("colour"));
+    assert!(out.contains("palette"));
+    assert!(out.contains("shavian"));
+}
+
+#[test]
+fn help_subcommand_still_works() {
+    let (out, _, code) = delphi(&["help"]);
+    assert_eq!(code, 0);
+    assert!(out.contains("Usage:"));
+}
+
+#[test]
+fn agent_reference_emits_plain_text_only() {
+    let (out, _, code) = delphi(&["agent"]);
+    assert_eq!(code, 0);
+    // Should be plain text (no ANSI escapes) so it pipes cleanly to AI agents.
+    assert!(
+        !out.contains('\x1b'),
+        "agent output should be plain text, contained ANSI escape"
+    );
+    // Reference should cover the load-bearing sections.
+    assert!(out.contains("INVOCATION"));
+    assert!(out.contains("EXIT CODES"));
+    assert!(out.contains("COMMAND INDEX"));
+    assert!(out.contains("GOTCHAS"));
+    // And mention key gotchas.
+    assert!(out.contains("rmbg"), "should warn about rmbg stub");
+    assert!(out.contains("zsh") || out.contains("glob"), "should warn about ? glob");
+}
+
+#[test]
+fn sampler_mentions_agent_hint() {
+    let (out, _, code) = delphi(&[]);
+    assert_eq!(code, 0);
+    assert!(out.contains("delphi agent"));
+}
+
+#[test]
+fn install_man_dry_run_lists_pages() {
+    let (out, _, code) = delphi(&["install-man", "--dry-run"]);
+    assert_eq!(code, 0);
+    // Every page line ends in `.1` and at least the master page is listed.
+    let lines: Vec<&str> = out.lines().collect();
+    assert!(lines.iter().any(|l| l.ends_with("delphi.1")));
+    assert!(lines.iter().any(|l| l.ends_with("delphi-palette.1")));
+    assert!(lines.len() >= 10);
+}
+
+#[test]
+fn install_man_writes_to_dir() {
+    let dir = scratch("install-man");
+    let (_, _, code) = delphi(&["install-man", "--dir", dir.to_str().unwrap()]);
+    assert_eq!(code, 0);
+    // delphi.1 is the master page and must be present.
+    let master = dir.join("delphi.1");
+    assert!(master.exists(), "master page not written");
+    let content = std::fs::read_to_string(&master).unwrap();
+    // groff/mandoc page should mention NAME and SYNOPSIS sections.
+    assert!(content.contains(".SH NAME"));
+    assert!(content.contains(".SH SYNOPSIS"));
 }
 
 // ===========================================================================
@@ -434,10 +508,15 @@ fn palette_unknown_strategy_errors() {
 }
 
 #[test]
-fn palette_missing_strategy_hints_list() {
-    let (_, err, code) = delphi(&["palette", "--size", "5"]);
-    assert_eq!(code, 1);
-    assert!(err.contains("--list") || err.contains("strategy"));
+fn palette_bare_invocation_returns_random_cohesive() {
+    // `delphi palette` with no args should default to random-cohesive, size 5.
+    let (out, _, code) = delphi(&["palette"]);
+    assert_eq!(code, 0);
+    let lines: Vec<&str> = out.trim().lines().collect();
+    assert_eq!(lines.len(), 5);
+    for l in &lines {
+        assert!(l.starts_with('#') && l.len() == 7, "expected hex, got {l}");
+    }
 }
 
 // ===========================================================================
@@ -776,18 +855,23 @@ fn trace_writes_svg() {
 }
 
 #[test]
-fn rmbg_is_a_friendly_stub() {
-    let dir = scratch("rmbg");
-    let src = dir.join("src.png");
-    make_png(&src, "rmbg");
-    let (_, err, code) = delphi(&["rmbg", src.to_str().unwrap()]);
-    // Exit code 3 == Processing error per error.rs
-    assert_eq!(code, 3);
+fn rmbg_help_documents_approve_flag() {
+    // We don't run rmbg end-to-end in tests — that requires downloading a
+    // ~170 MB model. Instead, verify the documented surface: --approve is
+    // discoverable, the about-line mentions the model download, and an
+    // empty-input invocation produces a usage error rather than panicking.
+    let (out, _, code) = delphi(&["rmbg", "--help"]);
+    assert_eq!(code, 0);
+    assert!(out.contains("--approve"));
+    assert!(out.to_lowercase().contains("model"));
+}
+
+#[test]
+fn rmbg_with_no_inputs_is_usage_error() {
+    let (_, err, code) = delphi(&["rmbg"]);
+    assert_eq!(code, 1);
     assert!(err.to_lowercase().contains("rmbg"));
-    assert!(
-        err.contains("ONNX") || err.contains("model") || err.contains("implemented"),
-        "stub message should explain why: {err}"
-    );
+    assert!(err.to_lowercase().contains("input"));
 }
 
 #[test]

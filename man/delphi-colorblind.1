@@ -1,0 +1,22 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-COLORBLIND 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+colorblind \- Simulate colour blindness on an image or a colour
+.SH SYNOPSIS
+\fBcolorblind\fR [\fB\-\-cb\-type\fR] [\fB\-\-colour\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIINPUT\fR] 
+.SH DESCRIPTION
+Simulate colour blindness on an image or a colour
+.SH OPTIONS
+.TP
+\fB\-\-cb\-type\fR \fI<CB_TYPE>\fR [default: deuteranopia]
+Type: normal, protanopia, deuteranopia, tritanopia, protanomaly, deuteranomaly, tritanomaly, achromatopsia, achromatomaly
+.TP
+\fB\-\-colour\fR
+Treat the input as a colour string rather than an image path
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+[\fIINPUT\fR]
+Input image file, or a colour string when used with \-\-colour

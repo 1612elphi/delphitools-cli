@@ -1,0 +1,22 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-FAVICON 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+favicon \- Generate multi\-size favicons from a source image
+.SH SYNOPSIS
+\fBfavicon\fR [\fB\-\-sizes\fR] [\fB\-\-ico\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIIMAGE\fR> 
+.SH DESCRIPTION
+Generate multi\-size favicons from a source image
+.SH OPTIONS
+.TP
+\fB\-\-sizes\fR \fI<SIZES>\fR [default: 16,32,48,180,512]
+Comma\-separated sizes (default: 16,32,48,180,512)
+.TP
+\fB\-\-ico\fR
+Also emit a multi\-size favicon.ico
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fIIMAGE\fR>
+

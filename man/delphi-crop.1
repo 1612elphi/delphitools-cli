@@ -1,0 +1,22 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-CROP 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+crop \- Crop an image to a social media aspect ratio
+.SH SYNOPSIS
+\fBcrop\fR [\fB\-\-ratio\fR] [\fB\-\-position\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIIMAGES\fR] 
+.SH DESCRIPTION
+Crop an image to a social media aspect ratio
+.SH OPTIONS
+.TP
+\fB\-\-ratio\fR \fI<RATIO>\fR [default: 1:1]
+Aspect ratio (e.g. 1:1, 4:5, 16:9)
+.TP
+\fB\-\-position\fR \fI<POSITION>\fR [default: center]
+Crop position: center, top, bottom, left, right, top\-left, top\-right, bottom\-left, bottom\-right
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+[\fIIMAGES\fR]
+Input image(s)

@@ -1,0 +1,25 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-MATTE 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+matte \- Place a non\-square image on a square (or aspect\-ratio) matte
+.SH SYNOPSIS
+\fBmatte\fR [\fB\-\-ratio\fR] [\fB\-\-mode\fR] [\fB\-\-colour\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIIMAGES\fR] 
+.SH DESCRIPTION
+Place a non\-square image on a square (or aspect\-ratio) matte
+.SH OPTIONS
+.TP
+\fB\-\-ratio\fR \fI<RATIO>\fR [default: 1:1]
+
+.TP
+\fB\-\-mode\fR \fI<MODE>\fR [default: blur]
+Matte fill mode: solid, blur, gradient
+.TP
+\fB\-\-colour\fR \fI<COLOUR>\fR [default: #ffffff]
+Background colour (for \-\-mode solid)
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+[\fIIMAGES\fR]
+

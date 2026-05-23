@@ -1,0 +1,28 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-TIME 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+time \- Unix timestamp and date arithmetic
+.SH SYNOPSIS
+\fBtime\fR [\fB\-\-to\fR] [\fB\-\-tz\fR] [\fB\-\-add\fR] [\fB\-\-sub\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIINPUT\fR] 
+.SH DESCRIPTION
+Unix timestamp and date arithmetic
+.SH OPTIONS
+.TP
+\fB\-\-to\fR \fI<TO>\fR
+Output format(s): iso, rfc2822, rfc3339, unix, human. Default: all
+.TP
+\fB\-\-tz\fR \fI<TZ>\fR
+Timezone (IANA name, e.g. America/New_York)
+.TP
+\fB\-\-add\fR \fI<ADD>\fR
+Add a duration (e.g. 30d, 5h, 90m)
+.TP
+\fB\-\-sub\fR \fI<SUB>\fR
+Subtract a duration
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+[\fIINPUT\fR]
+

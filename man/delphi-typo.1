@@ -1,0 +1,22 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-TYPO 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+typo \- Convert between typographic units (pt, px, mm, em, rem, pc, in, cm)
+.SH SYNOPSIS
+\fBtypo\fR [\fB\-\-base\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIVALUE\fR> [\fITARGETS\fR] 
+.SH DESCRIPTION
+Convert between typographic units (pt, px, mm, em, rem, pc, in, cm)
+.SH OPTIONS
+.TP
+\fB\-\-base\fR \fI<BASE>\fR [default: 16]
+Base font size in px (for em/rem conversions)
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fIVALUE\fR>
+Value with unit, e.g. "12pt"
+.TP
+[\fITARGETS\fR]
+Target unit(s) (e.g. px,mm,pc). Shows all if omitted

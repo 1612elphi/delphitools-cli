@@ -1,0 +1,34 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-PALETTE 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+palette \- Generate colour palettes using 28 strategies across 6 categories
+.SH SYNOPSIS
+\fBpalette\fR [\fB\-\-strategy\fR] [\fB\-\-size\fR] [\fB\-\-format\fR] [\fB\-\-lock\fR] [\fB\-\-seed\fR] [\fB\-p\fR|\fB\-\-pretty\fR] [\fB\-\-list\fR] [\fB\-h\fR|\fB\-\-help\fR] 
+.SH DESCRIPTION
+Generate colour palettes using 28 strategies across 6 categories
+.SH OPTIONS
+.TP
+\fB\-\-strategy\fR \fI<STRATEGY>\fR
+Strategy name (e.g. analogous, 80s, ocean\-sunset). Omit to list strategies
+.TP
+\fB\-\-size\fR \fI<SIZE>\fR [default: 5]
+Number of colours (default 5)
+.TP
+\fB\-\-format\fR \fI<FORMAT>\fR [default: hex]
+Output format: hex (default), css, json, png
+.TP
+\fB\-\-lock\fR \fI<LOCK>\fR
+Lock specific slots, comma\-separated: "0:#ff6600,3:#003366"
+.TP
+\fB\-\-seed\fR \fI<SEED>\fR
+Seed for reproducible output (any 64\-bit unsigned integer)
+.TP
+\fB\-p\fR, \fB\-\-pretty\fR
+Prefix each colour with its slot index (e.g. `[0]`) — useful for `\-\-lock`
+.TP
+\fB\-\-list\fR
+List all available strategies and exit
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help

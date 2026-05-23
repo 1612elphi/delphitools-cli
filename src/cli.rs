@@ -5,9 +5,8 @@ use std::path::PathBuf;
 #[command(
     name = "delphi",
     version,
-    about = "delphitools CLI — design & publishing utilities",
-    after_help = "Run `delphi <command> --help` for command-specific usage.",
-    arg_required_else_help = true
+    about = "delphitools — indie toolkit",
+    after_help = "Run `delphi <command> --help` for command-specific usage, or `delphi ?` for the full list."
 )]
 pub struct Cli {
     #[command(subcommand)]
@@ -30,7 +29,7 @@ pub struct Cli {
 pub enum Command {
     // ── Colour ──────────────────────────────────────────────────────────────
     /// Convert a colour between formats
-    #[command(alias = "col")]
+    #[command(visible_aliases = ["col", "c"])]
     Colour {
         /// Colour to convert (hex, rgb, hsl, oklch, oklab, or name)
         colour: String,
@@ -44,6 +43,7 @@ pub enum Command {
     },
 
     /// Generate colour harmonies from a base colour
+    #[command(visible_aliases = ["harm", "h"])]
     Harmony {
         colour: String,
         harmony_type: Option<String>,
@@ -52,13 +52,14 @@ pub enum Command {
     },
 
     /// Check WCAG contrast ratio between two colours
+    #[command(visible_alias = "contr")]
     Contrast {
         fg: String,
         bg: String,
     },
 
     /// Generate Tailwind CSS colour shades from a base colour
-    #[command(alias = "tw")]
+    #[command(visible_aliases = ["tw", "shades"])]
     TailwindShades {
         colour: String,
         mode: Option<String>,
@@ -67,7 +68,7 @@ pub enum Command {
     },
 
     /// Generate colour palettes using 28 strategies across 6 categories
-    #[command(alias = "pal")]
+    #[command(visible_aliases = ["pal", "p"])]
     Palette {
         /// Strategy name (e.g. analogous, 80s, ocean-sunset). Omit to list strategies.
         #[arg(long)]
@@ -89,7 +90,7 @@ pub enum Command {
         #[arg(long)]
         seed: Option<u64>,
 
-        /// Show colour swatches
+        /// Prefix each colour with its slot index (e.g. `[0]`) — useful for `--lock`
         #[arg(long, short)]
         pretty: bool,
 
@@ -99,7 +100,7 @@ pub enum Command {
     },
 
     /// Simulate colour blindness on an image or a colour
-    #[command(alias = "cb")]
+    #[command(visible_aliases = ["cb", "cvd"])]
     Colorblind {
         /// Input image file, or a colour string when used with --colour
         input: Option<String>,
@@ -116,6 +117,7 @@ pub enum Command {
 
     // ── Social Media ────────────────────────────────────────────────────────
     /// Crop an image to a social media aspect ratio
+    #[command(visible_alias = "cr")]
     Crop {
         /// Input image(s)
         images: Vec<PathBuf>,
@@ -130,6 +132,7 @@ pub enum Command {
     },
 
     /// Place a non-square image on a square (or aspect-ratio) matte
+    #[command(visible_alias = "m")]
     Matte {
         images: Vec<PathBuf>,
 
@@ -146,6 +149,7 @@ pub enum Command {
     },
 
     /// Split a wide image into carousel tiles for Instagram
+    #[command(visible_alias = "scr")]
     Scroll {
         image: PathBuf,
 
@@ -161,7 +165,7 @@ pub enum Command {
     },
 
     /// Composite a watermark onto an image
-    #[command(alias = "wm")]
+    #[command(visible_aliases = ["wm", "mark"])]
     Watermark {
         images: Vec<PathBuf>,
 
@@ -184,7 +188,7 @@ pub enum Command {
 
     // ── Images & Assets ─────────────────────────────────────────────────────
     /// Generate multi-size favicons from a source image
-    #[command(alias = "fav")]
+    #[command(visible_aliases = ["fav", "f"])]
     Favicon {
         image: PathBuf,
 
@@ -198,11 +202,13 @@ pub enum Command {
     },
 
     /// Optimise SVG files
+    #[command(visible_alias = "svg")]
     Svgo {
         files: Vec<PathBuf>,
     },
 
     /// Split an image into a grid of tiles
+    #[command(visible_alias = "sp")]
     Split {
         image: PathBuf,
 
@@ -214,7 +220,7 @@ pub enum Command {
     },
 
     /// Convert images between formats (with optional resize)
-    #[command(alias = "conv")]
+    #[command(visible_aliases = ["conv", "cv"])]
     Convert {
         images: Vec<PathBuf>,
 
@@ -232,6 +238,7 @@ pub enum Command {
     },
 
     /// Add colour noise overlay to artwork
+    #[command(visible_alias = "grain")]
     Noise {
         images: Vec<PathBuf>,
 
@@ -248,12 +255,18 @@ pub enum Command {
         seed: Option<u64>,
     },
 
-    /// Remove background from an image
+    /// Remove background from an image (downloads a ~170 MB Apache-licensed ONNX model on first use)
+    #[command(visible_alias = "nobg")]
     Rmbg {
         images: Vec<PathBuf>,
+
+        /// Pre-approve the one-time model download (required in non-interactive mode)
+        #[arg(long)]
+        approve: bool,
     },
 
     /// Trace raster images to SVG vectors
+    #[command(visible_alias = "vec")]
     Trace {
         image: PathBuf,
 
@@ -271,12 +284,14 @@ pub enum Command {
     },
 
     /// Trim transparent edges from a PNG
+    #[command(visible_alias = "trim")]
     Clip {
         images: Vec<PathBuf>,
     },
 
     // ── Typography & Text ───────────────────────────────────────────────────
     /// Convert px to rem
+    #[command(visible_alias = "pr")]
     Px2rem {
         value: f64,
         #[arg(long, default_value = "16")]
@@ -284,6 +299,7 @@ pub enum Command {
     },
 
     /// Convert rem to px
+    #[command(visible_alias = "rp")]
     Rem2px {
         value: f64,
         #[arg(long, default_value = "16")]
@@ -291,13 +307,17 @@ pub enum Command {
     },
 
     /// Compute line-height values for a given font size
-    #[command(alias = "lh")]
+    #[command(visible_aliases = ["lh", "lineh"])]
     LineHeight {
+        /// Font size in pixels (defaults to 16)
+        #[arg(default_value = "16")]
         font_size: f64,
+        /// Show only a single named ratio (tight, snug, normal, relaxed, loose, golden)
         name: Option<String>,
     },
 
     /// Convert between typographic units (pt, px, mm, em, rem, pc, in, cm)
+    #[command(visible_alias = "type")]
     Typo {
         /// Value with unit, e.g. "12pt"
         value: String,
@@ -311,11 +331,13 @@ pub enum Command {
     },
 
     /// Count words, characters, sentences, and reading time
+    #[command(visible_aliases = ["words", "w"])]
     Wc {
         input: Option<String>,
     },
 
     /// Look up paper size dimensions
+    #[command(visible_alias = "page")]
     Paper {
         name: Option<String>,
         #[arg(long)]
@@ -329,6 +351,7 @@ pub enum Command {
     },
 
     /// Look up Unicode characters by codepoint, name, range, or search term
+    #[command(visible_aliases = ["g", "char"])]
     Glyph {
         /// A codepoint (U+0041 or 0x41) or a single character
         input: Option<String>,
@@ -347,17 +370,20 @@ pub enum Command {
     },
 
     /// Extract metadata from a font file (ttf, otf, woff, woff2)
+    #[command(visible_alias = "font")]
     FontInfo {
         font: PathBuf,
     },
 
     // ── Print & Production ──────────────────────────────────────────────────
     /// Analyse a PDF for print-readiness issues
+    #[command(visible_alias = "pre")]
     Preflight {
         pdf: PathBuf,
     },
 
     /// Impose 8 images into a single-sheet mini-zine layout
+    #[command(visible_alias = "z")]
     Zine {
         /// 8 page images (in reading order: page1..page8)
         images: Vec<PathBuf>,
@@ -372,6 +398,7 @@ pub enum Command {
     },
 
     /// Impose a PDF for booklet/saddle-stitch/n-up printing
+    #[command(visible_aliases = ["imp", "i"])]
     Impose {
         pdf: PathBuf,
 
@@ -414,6 +441,7 @@ pub enum Command {
 
     // ── Other Tools ─────────────────────────────────────────────────────────
     /// Generate styled QR codes
+    #[command(visible_alias = "q")]
     Qr {
         /// Data to encode
         data: String,
@@ -439,7 +467,7 @@ pub enum Command {
     },
 
     /// Generate 1D/2D barcodes
-    #[command(alias = "bc")]
+    #[command(visible_aliases = ["bc", "b"])]
     Barcode {
         data: String,
 
@@ -461,6 +489,7 @@ pub enum Command {
     },
 
     /// Generate HTML meta tags
+    #[command(visible_alias = "og")]
     Meta {
         #[arg(long)]
         title: String,
@@ -481,7 +510,7 @@ pub enum Command {
     },
 
     /// Test a regex pattern against text
-    #[command(alias = "re")]
+    #[command(visible_aliases = ["re", "rx", "r"])]
     Regex {
         /// Regex pattern (Rust regex syntax)
         pattern: String,
@@ -496,6 +525,7 @@ pub enum Command {
 
     // ── Calculators ─────────────────────────────────────────────────────────
     /// Evaluate a mathematical expression
+    #[command(visible_alias = "ca")]
     Calc {
         expression: Option<String>,
 
@@ -505,6 +535,7 @@ pub enum Command {
     },
 
     /// Convert numbers between bases (dec, hex, oct, bin)
+    #[command(visible_alias = "radix")]
     Base {
         value: String,
         targets: Vec<String>,
@@ -513,6 +544,7 @@ pub enum Command {
     },
 
     /// Unix timestamp and date arithmetic
+    #[command(visible_aliases = ["t", "date"])]
     Time {
         input: Option<String>,
 
@@ -534,6 +566,7 @@ pub enum Command {
     },
 
     /// Convert between units (length, weight, data, temperature, volume, speed, pressure, time)
+    #[command(visible_alias = "u")]
     Unit {
         /// Value with unit, e.g. "100kg" or "100 kg"
         value: String,
@@ -543,18 +576,21 @@ pub enum Command {
     },
 
     /// Encode text (base64, url)
+    #[command(visible_aliases = ["enc", "e"])]
     Encode {
         encoding: String,
         input: Option<String>,
     },
 
     /// Decode text (base64, url)
+    #[command(visible_aliases = ["dec", "d"])]
     Decode {
         encoding: String,
         input: Option<String>,
     },
 
     /// Generate a hash of input text
+    #[command(visible_alias = "digest")]
     Hash {
         algorithm: String,
         input: Option<String>,
@@ -562,7 +598,7 @@ pub enum Command {
 
     // ── Turbo-nerd shit ────────────────────────────────────────────────────
     /// Transliterate English text to the Shavian alphabet
-    #[command(alias = "shaw")]
+    #[command(visible_aliases = ["shaw", "shav", "sv"])]
     Shavian {
         input: Option<String>,
 
@@ -575,5 +611,19 @@ pub enum Command {
     /// Generate shell completions
     Completions {
         shell: clap_complete::Shell,
+    },
+
+    /// Print a machine-readable usage reference for AI agents
+    Agent,
+
+    /// Install the bundled man pages so `man delphi` works
+    InstallMan {
+        /// Write to this directory instead of the default (`$HOME/.local/share/man/man1`)
+        #[arg(long)]
+        dir: Option<PathBuf>,
+
+        /// Print the paths that would be written without writing anything
+        #[arg(long)]
+        dry_run: bool,
     },
 }

@@ -1,0 +1,19 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-LINE-HEIGHT 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+line\-height \- Compute line\-height values for a given font size
+.SH SYNOPSIS
+\fBline\-height\fR [\fB\-h\fR|\fB\-\-help\fR] [\fIFONT_SIZE\fR] [\fINAME\fR] 
+.SH DESCRIPTION
+Compute line\-height values for a given font size
+.SH OPTIONS
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+[\fIFONT_SIZE\fR] [default: 16]
+Font size in pixels (defaults to 16)
+.TP
+[\fINAME\fR]
+Show only a single named ratio (tight, snug, normal, relaxed, loose, golden)

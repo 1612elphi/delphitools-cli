@@ -1,0 +1,124 @@
+delphitools — AI agent reference
+================================
+
+WHAT THIS IS
+  A CLI of ~40 design/publishing utilities: colour, image processing,
+  PDF, calculators, typography, generators. Single binary. Offline.
+  No network calls, no config files, no global state. Stdout-pipeable.
+
+INVOCATION
+  delphi <command> [args] [flags]
+  Three identical aliases: `delphi`, `delphitools`, `dt`.
+
+DISCOVERY
+  delphi ?                       List every subcommand. Quote in zsh: 'delphi ?'.
+  delphi help                    Same as `?`.
+  delphi <cmd> --help            Per-command flags, defaults, and aliases.
+  man delphi-<cmd>               Man page (after `delphi install-man`).
+
+GLOBAL FLAGS (apply to every command)
+  -j, --json                     Emit structured JSON instead of plain text.
+  -q, --quiet                    Suppress informational logging; keep the result.
+  -o, --output <path>            Override the output path / directory.
+
+IO CONVENTIONS
+  Text input precedence:         positional arg → file path → stdin.
+  File output naming:            <stem>-<operation>.<ext>; override with -o.
+  Multi-file output:             -o is a directory; per-input filenames preserved.
+  Batch tools:                   continue on per-file failure; exit 3 if any failed.
+  TTY detection:                 ANSI swatches/colour suppressed when piped or NO_COLOR=1.
+
+EXIT CODES
+  0  success
+  1  usage error      (bad flag, missing required arg)
+  2  input error      (file not found, unparseable input)
+  3  processing error (encoding/encoding/saving failed; batch had failures)
+
+COMMAND INDEX
+  Colour:     colour contrast harmony tailwind-shades palette colorblind
+  Image:      crop matte scroll watermark favicon split convert noise clip trace svgo rmbg
+  PDF:        preflight zine impose
+  Text/Type:  px2rem rem2px line-height typo wc paper glyph font-info regex shavian
+  Generators: qr barcode meta
+  Calc:       calc base time unit encode decode hash
+  Meta:       agent install-man completions
+
+COMMON RECIPES
+  # Colour: convert + harmony
+  delphi colour "#ff6600" hex,rgb,oklch -j
+  delphi harmony "#ff6600" complementary -j
+  delphi tw "#3b82f6" vivid                       # alias for tailwind-shades
+
+  # Palette generation (28 strategies; seedable for determinism)
+  delphi palette --strategy 80s --size 6 --seed 1
+  delphi palette --strategy ocean-sunset --size 5 -j
+  delphi palette --format png -o swatch.png       # render to image
+
+  # Image manipulation (batch-friendly)
+  delphi crop *.jpg --ratio 1:1 --position center -o cropped/
+  delphi convert *.png --to webp -o webp/
+  delphi favicon icon.png --sizes 16,32,180,512 --ico
+  delphi trace logo.png --preset default          # raster → SVG
+  delphi clip photo.png                           # trim transparent border
+
+  # PDF
+  delphi preflight doc.pdf -j                     # print-readiness check
+  delphi impose book.pdf --layout saddle-stitch --crop-marks
+  delphi zine p1.png p2.png ... p8.png -o zine.pdf
+
+  # Typography & text
+  delphi typo 12pt px,mm,em
+  delphi glyph U+2603                             # snowman info
+  delphi glyph --search "snowman" --limit 10
+  delphi font-info /System/Library/Fonts/SFNS.ttf
+  echo "hello world" | delphi shavian
+  cat essay.md | delphi wc -j
+
+  # Generators
+  delphi qr "https://example.com" --size 1024 -o qr.png
+  delphi barcode "12345678" --format code128 -o bc.png
+  delphi meta --title "My Page" --description "..." --url "https://..."
+
+  # Calc
+  delphi calc "sin(pi/4) + 2^10"
+  delphi calc "sin(90)" --angles deg
+  delphi unit "100 kg" lb oz g -j
+  delphi time now --tz America/New_York --to iso,unix
+  delphi time "2026-01-01" --add 30d
+  delphi base ff dec --from hex
+  delphi hash sha256 "Hello, World!"
+  echo "Hello" | delphi encode base64
+
+  # Regex
+  delphi regex '\d{3}-\d{4}' "phone: 555-1234" -j
+
+JSON OUTPUT
+  Every command honours `--json` (-j). Use jq to parse:
+    delphi palette --size 5 -j | jq '.[].hex'
+    delphi preflight doc.pdf -j | jq '.page_count'
+    delphi colour tomato -j | jq '.oklch'
+
+ALIASES
+  Most commands have 1-3 short aliases. Examples:
+    colour  → col, c                 palette → pal, p
+    convert → conv, cv               tailwind-shades → tw, shades
+    shavian → shaw, shav, sv         regex → re, rx, r
+    encode  → enc, e                 decode → dec, d
+    qr      → q                      unit  → u
+    glyph   → g, char                font-info → font
+  Full list under `delphi ?` (each entry shows its aliases).
+
+GOTCHAS FOR AGENTS
+  - In zsh the literal `?` may glob — always quote: `delphi '?'`.
+  - `rmbg` downloads a ~170 MB Apache-2.0 model on first use. In a TTY it
+    prompts; in non-interactive contexts you MUST pass `--approve` once.
+    Cache lives at `$XDG_CACHE_HOME/delphitools-cli/models/` (or
+    `~/Library/Caches/delphitools-cli/models/` on macOS) and persists.
+  - WebP `--quality` is a no-op (encoder is lossless-only).
+  - `--seed N` makes palette/noise reproducible across runs.
+  - When passing colour args, hex (`#ff6600`), rgb(), hsl(), oklch(),
+    oklab(), and CSS names (`rebeccapurple`) all work.
+  - For batch tools, `-o` must be a directory when multiple inputs are given.
+
+VERSION
+  delphi --version    →  delphi 0.1.0

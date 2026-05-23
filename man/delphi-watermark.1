@@ -1,0 +1,28 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-WATERMARK 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+watermark \- Composite a watermark onto an image
+.SH SYNOPSIS
+\fBwatermark\fR <\fB\-\-mark\fR> [\fB\-\-position\fR] [\fB\-\-opacity\fR] [\fB\-\-scale\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIIMAGES\fR] 
+.SH DESCRIPTION
+Composite a watermark onto an image
+.SH OPTIONS
+.TP
+\fB\-\-mark\fR \fI<MARK>\fR
+Watermark image
+.TP
+\fB\-\-position\fR \fI<POSITION>\fR [default: bottom\-right]
+Position: top\-left, top, top\-right, left, center, right, bottom\-left, bottom, bottom\-right
+.TP
+\fB\-\-opacity\fR \fI<OPACITY>\fR [default: 0.3]
+Opacity 0.0 – 1.0
+.TP
+\fB\-\-scale\fR \fI<SCALE>\fR [default: 0.2]
+Watermark scale relative to the longest edge of the input image
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+[\fIIMAGES\fR]
+

@@ -1,0 +1,159 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+delphi \- delphitools — indie toolkit
+.SH SYNOPSIS
+\fBdelphi\fR [\fB\-j\fR|\fB\-\-json\fR] [\fB\-q\fR|\fB\-\-quiet\fR] [\fB\-o\fR|\fB\-\-output\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fB\-V\fR|\fB\-\-version\fR] <\fIsubcommands\fR>
+.SH DESCRIPTION
+delphitools — indie toolkit
+.SH OPTIONS
+.TP
+\fB\-j\fR, \fB\-\-json\fR
+Output structured JSON instead of human\-readable text
+.TP
+\fB\-q\fR, \fB\-\-quiet\fR
+Suppress informational output; only emit the result
+.TP
+\fB\-o\fR, \fB\-\-output\fR \fI<OUTPUT>\fR
+Write output to a file instead of stdout (single\-file tools) or a directory (batch tools)
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+\fB\-V\fR, \fB\-\-version\fR
+Print version
+.SH SUBCOMMANDS
+.TP
+delphi\-colour(1)
+Convert a colour between formats
+.TP
+delphi\-harmony(1)
+Generate colour harmonies from a base colour
+.TP
+delphi\-contrast(1)
+Check WCAG contrast ratio between two colours
+.TP
+delphi\-tailwind\-shades(1)
+Generate Tailwind CSS colour shades from a base colour
+.TP
+delphi\-palette(1)
+Generate colour palettes using 28 strategies across 6 categories
+.TP
+delphi\-colorblind(1)
+Simulate colour blindness on an image or a colour
+.TP
+delphi\-crop(1)
+Crop an image to a social media aspect ratio
+.TP
+delphi\-matte(1)
+Place a non\-square image on a square (or aspect\-ratio) matte
+.TP
+delphi\-scroll(1)
+Split a wide image into carousel tiles for Instagram
+.TP
+delphi\-watermark(1)
+Composite a watermark onto an image
+.TP
+delphi\-favicon(1)
+Generate multi\-size favicons from a source image
+.TP
+delphi\-svgo(1)
+Optimise SVG files
+.TP
+delphi\-split(1)
+Split an image into a grid of tiles
+.TP
+delphi\-convert(1)
+Convert images between formats (with optional resize)
+.TP
+delphi\-noise(1)
+Add colour noise overlay to artwork
+.TP
+delphi\-rmbg(1)
+Remove background from an image
+.TP
+delphi\-trace(1)
+Trace raster images to SVG vectors
+.TP
+delphi\-clip(1)
+Trim transparent edges from a PNG
+.TP
+delphi\-px2rem(1)
+Convert px to rem
+.TP
+delphi\-rem2px(1)
+Convert rem to px
+.TP
+delphi\-line\-height(1)
+Compute line\-height values for a given font size
+.TP
+delphi\-typo(1)
+Convert between typographic units (pt, px, mm, em, rem, pc, in, cm)
+.TP
+delphi\-wc(1)
+Count words, characters, sentences, and reading time
+.TP
+delphi\-paper(1)
+Look up paper size dimensions
+.TP
+delphi\-glyph(1)
+Look up Unicode characters by codepoint, name, range, or search term
+.TP
+delphi\-font\-info(1)
+Extract metadata from a font file (ttf, otf, woff, woff2)
+.TP
+delphi\-preflight(1)
+Analyse a PDF for print\-readiness issues
+.TP
+delphi\-zine(1)
+Impose 8 images into a single\-sheet mini\-zine layout
+.TP
+delphi\-impose(1)
+Impose a PDF for booklet/saddle\-stitch/n\-up printing
+.TP
+delphi\-qr(1)
+Generate styled QR codes
+.TP
+delphi\-barcode(1)
+Generate 1D/2D barcodes
+.TP
+delphi\-meta(1)
+Generate HTML meta tags
+.TP
+delphi\-regex(1)
+Test a regex pattern against text
+.TP
+delphi\-calc(1)
+Evaluate a mathematical expression
+.TP
+delphi\-base(1)
+Convert numbers between bases (dec, hex, oct, bin)
+.TP
+delphi\-time(1)
+Unix timestamp and date arithmetic
+.TP
+delphi\-unit(1)
+Convert between units (length, weight, data, temperature, volume, speed, pressure, time)
+.TP
+delphi\-encode(1)
+Encode text (base64, url)
+.TP
+delphi\-decode(1)
+Decode text (base64, url)
+.TP
+delphi\-hash(1)
+Generate a hash of input text
+.TP
+delphi\-shavian(1)
+Transliterate English text to the Shavian alphabet
+.TP
+delphi\-completions(1)
+Generate shell completions
+.TP
+delphi\-help(1)
+Print this message or the help of the given subcommand(s)
+.SH EXTRA
+Run `delphi <command> \-\-help` for command\-specific usage, or `delphi ?` for the full list.
+.SH VERSION
+v0.1.0

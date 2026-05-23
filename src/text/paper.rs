@@ -151,10 +151,9 @@ pub fn run(
         return Ok(());
     }
 
-    // Positional name argument
-    let name = name.ok_or_else(|| {
-        Error::Usage("provide a paper size name (e.g. A4, Letter) or --series a|b|c|us".into())
-    })?;
+    // Default to A4 on bare `delphi paper` invocation. Use `--series a|b|c|us`
+    // to list sizes, or pass an explicit name.
+    let name = name.unwrap_or("A4");
 
     let size = SIZES
         .iter()
@@ -294,9 +293,9 @@ mod tests {
     }
 
     #[test]
-    fn run_no_args_errors() {
-        let r = run(None, None, "mm", 72.0, false, false);
-        assert!(matches!(r, Err(crate::error::Error::Usage(_))));
+    fn run_no_args_defaults_to_a4() {
+        // Bare `delphi paper` should print A4 dimensions, not error.
+        assert!(run(None, None, "mm", 72.0, false, false).is_ok());
     }
 
     #[test]

@@ -1,0 +1,22 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-ZINE 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+zine \- Impose 8 images into a single\-sheet mini\-zine layout
+.SH SYNOPSIS
+\fBzine\fR [\fB\-\-paper\fR] [\fB\-\-dpi\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIIMAGES\fR] 
+.SH DESCRIPTION
+Impose 8 images into a single\-sheet mini\-zine layout
+.SH OPTIONS
+.TP
+\fB\-\-paper\fR \fI<PAPER>\fR [default: a4]
+Output paper size (default: A4)
+.TP
+\fB\-\-dpi\fR \fI<DPI>\fR [default: 300]
+DPI for raster placement (default: 300)
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+[\fIIMAGES\fR]
+8 page images (in reading order: page1..page8)

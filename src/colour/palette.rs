@@ -303,7 +303,7 @@ impl Strategy {
         self.info().3
     }
 
-    fn generate(self, count: usize, rng: &mut dyn RngCore) -> Vec<Colour> {
+    pub fn generate(self, count: usize, rng: &mut dyn RngCore) -> Vec<Colour> {
         match self {
             // Random
             Strategy::TrueRandom => true_random(count, rng),
@@ -1038,27 +1038,33 @@ fn print_list() {
     }
 }
 
-fn output_hex(colours: &[Colour]) {
-    for c in colours {
-        println!("{}", c.to_hex());
-    }
-}
-
-fn output_pretty(colours: &[Colour]) {
-    for c in colours {
+fn output_hex(colours: &[Colour], with_index: bool) {
+    let idx_width = (colours.len().saturating_sub(1).to_string()).len();
+    for (i, c) in colours.iter().enumerate() {
         let (r, g, b) = c.to_u8();
         let block = output::colour_block(r, g, b);
-        if block.is_empty() {
-            println!("{}", c.to_hex());
+        let prefix = if with_index {
+            format!("[{i:>idx_width$}] ")
         } else {
-            println!("{block} {}", c.to_hex());
+            String::new()
+        };
+        if block.is_empty() {
+            println!("{prefix}{}", c.to_hex());
+        } else {
+            println!("{prefix}{block}  {}", c.to_hex());
         }
     }
 }
 
 fn output_css(colours: &[Colour]) {
     for (i, c) in colours.iter().enumerate() {
-        println!("--palette-{}: {};", i + 1, c.to_hex());
+        let (r, g, b) = c.to_u8();
+        let block = output::colour_block(r, g, b);
+        if block.is_empty() {
+            println!("--palette-{}: {};", i + 1, c.to_hex());
+        } else {
+            println!("{block}  --palette-{}: {};", i + 1, c.to_hex());
+        }
     }
 }
 
@@ -1123,12 +1129,12 @@ pub fn run(
         return Ok(());
     }
 
-    let strategy_str = strategy.ok_or_else(|| {
-        Error::Usage(
-            "no strategy given; use --list to see available strategies".into(),
-        )
-    })?;
-    let strat = Strategy::parse(strategy_str)?;
+    // Default strategy: random-cohesive — gives a usable palette on a bare
+    // `delphi palette` invocation. Use `--list` to see the full menu.
+    let strat = match strategy {
+        Some(s) => Strategy::parse(s)?,
+        None => Strategy::RandomCohesive,
+    };
 
     if size == 0 {
         return Err(Error::Usage("--size must be at least 1".into()));
@@ -1156,13 +1162,7 @@ pub fn run(
     }
 
     match effective_format {
-        "hex" => {
-            if pretty {
-                output_pretty(&colours);
-            } else {
-                output_hex(&colours);
-            }
-        }
+        "hex" => output_hex(&colours, pretty),
         "css" => output_css(&colours),
         "json" => output_json(&colours),
         "png" => {
@@ -1366,8 +1366,9 @@ mod tests {
     }
 
     #[test]
-    fn run_missing_strategy_errors() {
-        assert!(run(None, 5, "hex", None, None, false, false, false, None).is_err());
+    fn run_missing_strategy_defaults_to_random_cohesive() {
+        // Bare `delphi palette` should succeed using the random-cohesive default.
+        assert!(run(None, 5, "hex", None, Some(1), false, false, false, None).is_ok());
     }
 
     #[test]

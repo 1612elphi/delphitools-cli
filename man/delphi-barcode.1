@@ -1,0 +1,28 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-BARCODE 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+barcode \- Generate 1D/2D barcodes
+.SH SYNOPSIS
+\fBbarcode\fR [\fB\-\-format\fR] [\fB\-\-height\fR] [\fB\-\-scale\fR] [\fB\-\-text\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIDATA\fR> 
+.SH DESCRIPTION
+Generate 1D/2D barcodes
+.SH OPTIONS
+.TP
+\fB\-\-format\fR \fI<FORMAT>\fR [default: code128]
+Format: ean13, ean8, upca, code39, code128, codabar, code93, itf
+.TP
+\fB\-\-height\fR \fI<HEIGHT>\fR [default: 120]
+Bar height in px
+.TP
+\fB\-\-scale\fR \fI<SCALE>\fR [default: 2]
+Width scale (px per module)
+.TP
+\fB\-\-text\fR
+Include human\-readable text below the barcode
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fIDATA\fR>
+

@@ -1,0 +1,31 @@
+.ie \n(.g .ds Aq \(aq
+.el .ds Aq '
+.TH DELPHI-QR 1  "delphitools-cli 0.1.0" "delphitools manual"
+.SH NAME
+qr \- Generate styled QR codes
+.SH SYNOPSIS
+\fBqr\fR [\fB\-\-size\fR] [\fB\-\-fg\fR] [\fB\-\-bg\fR] [\fB\-\-logo\fR] [\fB\-\-error\-level\fR] [\fB\-h\fR|\fB\-\-help\fR] <\fIDATA\fR> 
+.SH DESCRIPTION
+Generate styled QR codes
+.SH OPTIONS
+.TP
+\fB\-\-size\fR \fI<SIZE>\fR [default: 512]
+
+.TP
+\fB\-\-fg\fR \fI<FG>\fR [default: #000000]
+Foreground colour
+.TP
+\fB\-\-bg\fR \fI<BG>\fR [default: #ffffff]
+Background colour (use "transparent" for none)
+.TP
+\fB\-\-logo\fR \fI<LOGO>\fR
+Optional logo to overlay (PNG, centered)
+.TP
+\fB\-\-error\-level\fR \fI<ERROR_LEVEL>\fR [default: M]
+Error correction level: L, M, Q, H (default M)
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Print help
+.TP
+<\fIDATA\fR>
+Data to encode
