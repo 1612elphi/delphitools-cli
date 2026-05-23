@@ -24,6 +24,17 @@ fn main() -> std::io::Result<()> {
     println!("cargo:rerun-if-changed=src/cli.rs");
     println!("cargo:rerun-if-changed=build.rs");
 
+    // Windows defaults to a 1 MB main-thread stack, which clap's derive-built
+    // Command tree + clap_mangen's per-subcommand rendering overflow. Run the
+    // actual work in a thread with a generous stack so the build is portable.
+    let join = std::thread::Builder::new()
+        .stack_size(16 * 1024 * 1024)
+        .spawn(generate)
+        .expect("spawn build thread");
+    join.join().expect("build thread panicked")
+}
+
+fn generate() -> std::io::Result<()> {
     let out_dir = PathBuf::from(env::var_os("OUT_DIR").expect("OUT_DIR not set"));
     let man_dir = out_dir.join("man");
     fs::create_dir_all(&man_dir)?;
