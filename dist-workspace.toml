@@ -8,7 +8,7 @@ cargo-dist-version = "0.32.0"
 # CI backends to support
 ci = "github"
 # The installers to generate for each app
-installers = ["shell", "powershell", "homebrew"]
+installers = ["shell", "homebrew"]
 # Target platforms to build apps for (Rust target-triple syntax)
 # Windows is on the roadmap. ort 2.0.0-rc.10's bundled MSVC static lib has a
 # CRT-linkage mismatch (73 unresolved __imp_ symbols at link time). Re-enable
