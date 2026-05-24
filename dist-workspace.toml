@@ -10,7 +10,10 @@ ci = "github"
 # The installers to generate for each app
 installers = ["shell", "powershell", "homebrew"]
 # Target platforms to build apps for (Rust target-triple syntax)
-targets = ["aarch64-apple-darwin", "aarch64-unknown-linux-gnu", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "x86_64-pc-windows-msvc"]
+# Windows is on the roadmap. ort 2.0.0-rc.10's bundled MSVC static lib has a
+# CRT-linkage mismatch (73 unresolved __imp_ symbols at link time). Re-enable
+# `x86_64-pc-windows-msvc` once we sort it (likely `+crt-static` or load-dynamic).
+targets = ["aarch64-apple-darwin", "aarch64-unknown-linux-gnu", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu"]
 # The Homebrew tap (org/homebrew-<name>) to push the generated formula to.
 # Requires a personal-access-token secret named HOMEBREW_TAP_TOKEN in the repo.
 # Create the empty `1612elphi/homebrew-delphitools` repo on GitHub before tagging.
