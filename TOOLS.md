@@ -661,26 +661,42 @@ check_images(pdf)
 
 ### zine-imposer
 
-Impose 8 images into a single-sheet mini-zine layout.
+Impose images into a single-sheet folded-zine layout. Two fold templates:
+
+- **mini8** (default) — classic 8-page mini-zine on a 4×2 grid, single-sided,
+  with a central fold-and-cut slit. Requires exactly 8 images.
+- **accordion** — zig-zag concertina on a 1×N grid (N ∈ {4,6,8}), no cut.
+  Single-sided is a fold-out strip (N images). `--double` makes a continuous
+  two-sided booklet (2×N images: front 1..N, back N+1..2N), printed flip-on-short-edge.
 
 ```
-delphi zine <img1> <img2> ... <img8> --dpi 300 --paper a4
+# Classic 8-page mini-zine (8 images)
+delphi zine <img1> ... <img8> --dpi 300 --paper a4
   -> zine.pdf
+
+# 6-panel accordion, single-sided (6 images)
+delphi zine --fold accordion --panels 6 <img1> ... <img6>
+
+# 8-panel accordion, double-sided (16 images -> 2-page PDF)
+delphi zine --fold accordion --panels 8 --double <img1> ... <img16>
 ```
 
 ```pseudo
-imgs = load_all(images)  # exactly 8
-sheet_w, sheet_h = paper_size(paper, dpi)
-cell_w = sheet_w / 4
-cell_h = sheet_h / 2
-# fixed zine page order (for fold-and-cut):
-layout = [
-  [page5_rot180, page4_rot180, page3_rot180, page2_rot180],
-  [page6,        page7,        page8,        page1       ]
-]
-for r, c in layout:
-  draw(sheet, imgs[page], x=c*cell_w, y=r*cell_h, rotate=rotation)
-write_pdf(sheet, output)
+required = fold == mini8 ? 8 : (double ? 2*panels : panels)
+imgs = load_all(images)  # count must == required
+sheet_w, sheet_h = landscape(paper_size(paper))   # long edge horizontal
+cols, rows = fold == mini8 ? (4, 2) : (panels, 1)
+cell_w, cell_h = sheet_w / cols, sheet_h / rows
+
+# mini8: fixed fold-and-cut order, top row rotated 180
+#   [p5↻ p4↻ p3↻ p2↻ / p6 p7 p8 p1]
+# accordion: page (c+1) at col c upright; double-sided adds a back page
+#   (pages N+1..2N at col c upright)
+for side in fold.sides():            # 1 page, or 2 for accordion --double
+  for {page, col, row, rotation} in side:
+    y = (rows - 1 - row) * cell_h    # printpdf origin is bottom-left
+    draw(page_img, imgs[page-1], x=col*cell_w, y, rotate=rotation)
+write_pdf(sides, output)
 ```
 
 ### imposer

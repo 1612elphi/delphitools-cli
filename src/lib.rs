@@ -205,8 +205,20 @@ fn run(cli: Cli) -> Result<(), error::Error> {
 
         // ── Print & Production ──────────────────────────────────────────────
         Command::Preflight { pdf } => pdf::preflight::run(&pdf, json),
-        Command::Zine { images, paper, dpi } => {
-            pdf::zine::run(&images, &paper, dpi, json, quiet, out.as_deref())
+        Command::Zine { images, fold, panels, double, paper, dpi } => {
+            let fold = match fold.as_str() {
+                "mini8" | "mini-8" => pdf::zine::Fold::MiniEight,
+                "accordion" => pdf::zine::Fold::Accordion {
+                    panels,
+                    double_sided: double,
+                },
+                other => {
+                    return Err(error::Error::Usage(format!(
+                        "unknown fold '{other}' (expected mini8 or accordion)"
+                    )));
+                }
+            };
+            pdf::zine::run(&images, fold, &paper, dpi, json, quiet, out.as_deref())
         }
         Command::Impose {
             pdf,

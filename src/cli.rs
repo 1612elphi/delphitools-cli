@@ -382,11 +382,24 @@ pub enum Command {
         pdf: PathBuf,
     },
 
-    /// Impose 8 images into a single-sheet mini-zine layout
+    /// Impose images into a single-sheet folded-zine layout (mini-8 or accordion)
     #[command(visible_alias = "z")]
     Zine {
-        /// 8 page images (in reading order: page1..page8)
+        /// Page images in reading order. Count must match the fold:
+        /// mini8 = 8; accordion = panels (single-sided) or 2×panels (--double)
         images: Vec<PathBuf>,
+
+        /// Fold template: mini8 (classic 8-page) or accordion (concertina)
+        #[arg(long, default_value = "mini8")]
+        fold: String,
+
+        /// Panels for the accordion fold (4, 6, or 8). Ignored for mini8.
+        #[arg(long, default_value = "8")]
+        panels: u32,
+
+        /// Accordion double-sided (front pages 1..N, back N+1..2N; flip on short edge)
+        #[arg(long)]
+        double: bool,
 
         /// Output paper size (default: A4)
         #[arg(long, default_value = "a4")]

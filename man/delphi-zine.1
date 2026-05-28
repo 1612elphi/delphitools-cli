@@ -2,12 +2,21 @@
 .el .ds Aq '
 .TH DELPHI-ZINE 1  "delphitools-cli 0.1.0" "delphitools manual"
 .SH NAME
-zine \- Impose 8 images into a single\-sheet mini\-zine layout
+zine \- Impose images into a single\-sheet folded\-zine layout (mini\-8 or accordion)
 .SH SYNOPSIS
-\fBzine\fR [\fB\-\-paper\fR] [\fB\-\-dpi\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIIMAGES\fR] 
+\fBzine\fR [\fB\-\-fold\fR] [\fB\-\-panels\fR] [\fB\-\-double\fR] [\fB\-\-paper\fR] [\fB\-\-dpi\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIIMAGES\fR] 
 .SH DESCRIPTION
-Impose 8 images into a single\-sheet mini\-zine layout
+Impose images into a single\-sheet folded\-zine layout (mini\-8 or accordion)
 .SH OPTIONS
+.TP
+\fB\-\-fold\fR \fI<FOLD>\fR [default: mini8]
+Fold template: mini8 (classic 8\-page) or accordion (concertina)
+.TP
+\fB\-\-panels\fR \fI<PANELS>\fR [default: 8]
+Panels for the accordion fold (4, 6, or 8). Ignored for mini8
+.TP
+\fB\-\-double\fR
+Accordion double\-sided (front pages 1..N, back N+1..2N; flip on short edge)
 .TP
 \fB\-\-paper\fR \fI<PAPER>\fR [default: a4]
 Output paper size (default: A4)
@@ -19,4 +28,4 @@ DPI for raster placement (default: 300)
 Print help
 .TP
 [\fIIMAGES\fR]
-8 page images (in reading order: page1..page8)
+Page images in reading order. Count must match the fold: mini8 = 8; accordion = panels (single\-sided) or 2×panels (\-\-double)
