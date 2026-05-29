@@ -205,12 +205,13 @@ fn run(cli: Cli) -> Result<(), error::Error> {
 
         // ── Print & Production ──────────────────────────────────────────────
         Command::Preflight { pdf } => pdf::preflight::run(&pdf, json),
-        Command::Zine { images, fold, panels, double, paper, dpi } => {
+        Command::Zine { images, fold, panels, double, split, paper, dpi } => {
             let fold = match fold.as_str() {
                 "mini8" | "mini-8" => pdf::zine::Fold::MiniEight,
                 "accordion" => pdf::zine::Fold::Accordion {
                     panels,
                     double_sided: double,
+                    split,
                 },
                 other => {
                     return Err(error::Error::Usage(format!(

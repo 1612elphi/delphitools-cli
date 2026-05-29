@@ -20,6 +20,12 @@
 //! Double-sided produces a continuous booklet: front carries pages 1..N and the
 //! back carries pages N+1..2N (leftmost back = N+1), printed two-sided with a
 //! **short-edge** flip so reading front-then-back stays continuous and upright.
+//!
+//! **accordion --split (two-up)** — the panels are duplicated into two stacked
+//! lanes (rows = 2) so each printed side carries two identical copies of the
+//! strip. Cutting the sheet in half horizontally yields two identical strips
+//! with half-height panels (a better aspect ratio than one tall strip). The
+//! page-slot count is unchanged because the lanes are copies, not new content.
 
 use crate::error::Error;
 use image::{GenericImageView, imageops::FilterType};
@@ -47,7 +53,13 @@ struct Placement {
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Fold {
     MiniEight,
-    Accordion { panels: u32, double_sided: bool },
+    Accordion {
+        panels: u32,
+        double_sided: bool,
+        /// Two-up: duplicate the strip into two stacked lanes (rows = 2) for two
+        /// identical copies per sheet, separated by a horizontal cut.
+        split: bool,
+    },
 }
 
 /// Classic 8-page mini-zine placements (4 columns × 2 rows, single side).
@@ -76,10 +88,13 @@ impl Fold {
     }
 
     /// Grid dimensions on the landscape sheet: `(cols, rows)`.
+    ///
+    /// `--split` adds a second lane (rows = 2) without changing the column
+    /// count; the lanes are identical copies of the strip.
     fn cols_rows(&self) -> (u32, u32) {
         match self {
             Fold::MiniEight => (4, 2),
-            Fold::Accordion { panels, .. } => (*panels, 1),
+            Fold::Accordion { panels, split, .. } => (*panels, if *split { 2 } else { 1 }),
         }
     }
 
@@ -94,10 +109,12 @@ impl Fold {
     }
 
     /// Total page slots the user must supply, across all sides.
+    /// Unchanged by `--split` — the two split lanes are identical copies, not
+    /// new content, so the user still supplies only N (or 2N) images.
     fn page_count(&self) -> u32 {
         match self {
             Fold::MiniEight => 8,
-            Fold::Accordion { panels, double_sided } => {
+            Fold::Accordion { panels, double_sided, .. } => {
                 if *double_sided { panels * 2 } else { *panels }
             }
         }
@@ -108,20 +125,31 @@ impl Fold {
     fn sides(&self) -> Vec<Vec<Placement>> {
         match self {
             Fold::MiniEight => vec![MINI8_PLACEMENTS.to_vec()],
-            Fold::Accordion { panels, double_sided } => {
+            Fold::Accordion { panels, double_sided, split } => {
                 let n = *panels;
-                // Front: pages 1..N, left to right, upright.
-                let front: Vec<Placement> = (0..n)
-                    .map(|c| Placement { page: c + 1, col: c, row: 0, rotation: 0 })
-                    .collect();
-                let mut sides = vec![front];
+                let lanes = if *split { 2 } else { 1 };
+                // Build one printed side. When split, the same page numbers are
+                // duplicated into every lane (row) so cutting the sheet apart
+                // yields identical copies. Front: pages 1..N; back: N+1..2N
+                // (left to right, upright — the short-edge flip is physical only,
+                // so there is no column reversal).
+                let build_side = |first_page: u32| -> Vec<Placement> {
+                    let mut placements = Vec::with_capacity((lanes * n) as usize);
+                    for r in 0..lanes {
+                        for c in 0..n {
+                            placements.push(Placement {
+                                page: first_page + c,
+                                col: c,
+                                row: r,
+                                rotation: 0,
+                            });
+                        }
+                    }
+                    placements
+                };
+                let mut sides = vec![build_side(1)];
                 if *double_sided {
-                    // Back: pages N+1..2N, left to right, upright (no column
-                    // reversal — the short-edge flip is physical only).
-                    let back: Vec<Placement> = (0..n)
-                        .map(|c| Placement { page: n + 1 + c, col: c, row: 0, rotation: 0 })
-                        .collect();
-                    sides.push(back);
+                    sides.push(build_side(n + 1));
                 }
                 sides
             }
@@ -301,6 +329,8 @@ pub fn run(
             "dpi": dpi,
             "sides": fold.side_count(),
             "pages": fold.page_count(),
+            "split": matches!(fold, Fold::Accordion { split: true, .. }),
+            "lanes": rows,
         });
         println!("{}", serde_json::to_string_pretty(&v).unwrap());
     } else if !quiet {
@@ -363,7 +393,7 @@ mod tests {
         let paths = dummy_set("badpanel", 5);
         let r = run(
             &paths,
-            Fold::Accordion { panels: 5, double_sided: false },
+            Fold::Accordion { panels: 5, double_sided: false, split: false },
             "a4",
             72.0,
             false,
@@ -407,7 +437,7 @@ mod tests {
         let out = tmpdir.join(format!("delphi_zine_acc6s_out_{pid}.pdf"));
         let r = run(
             &paths,
-            Fold::Accordion { panels: 6, double_sided: false },
+            Fold::Accordion { panels: 6, double_sided: false, split: false },
             "a4",
             72.0,
             false,
@@ -432,7 +462,7 @@ mod tests {
         let out = tmpdir.join(format!("delphi_zine_acc6d_out_{pid}.pdf"));
         let r = run(
             &paths,
-            Fold::Accordion { panels: 6, double_sided: true },
+            Fold::Accordion { panels: 6, double_sided: true, split: false },
             "a4",
             72.0,
             false,
@@ -446,5 +476,54 @@ mod tests {
         let doc = lopdf::Document::load(&out).expect("lopdf must reload the output");
         assert_eq!(doc.get_pages().len(), 2, "double-sided accordion is two pages");
         let _ = std::fs::remove_file(&out);
+    }
+
+    #[test]
+    fn accordion_split_single_sided_writes_one_page() {
+        // 4-panel single-sided + split → still 4 images (lanes are copies) and
+        // still one PDF page; split only adds a second lane to the in-page grid.
+        let paths = dummy_set("acc4split", 4);
+        let tmpdir = std::env::temp_dir();
+        let pid = std::process::id();
+        let out = tmpdir.join(format!("delphi_zine_acc4split_out_{pid}.pdf"));
+        let r = run(
+            &paths,
+            Fold::Accordion { panels: 4, double_sided: false, split: true },
+            "a4",
+            72.0,
+            false,
+            true,
+            Some(&out),
+        );
+        cleanup(&paths);
+        r.unwrap();
+        let bytes = std::fs::read(&out).unwrap();
+        assert!(bytes.starts_with(b"%PDF-"));
+        let doc = lopdf::Document::load(&out).expect("lopdf must reload the output");
+        assert_eq!(
+            doc.get_pages().len(),
+            1,
+            "split does not change the PDF page count, only the in-page grid"
+        );
+        let _ = std::fs::remove_file(&out);
+    }
+
+    #[test]
+    fn accordion_split_grid_and_placements() {
+        // split → two lanes (rows = 2), same column count; page slots unchanged.
+        let fold = Fold::Accordion { panels: 4, double_sided: false, split: true };
+        assert_eq!(fold.cols_rows(), (4, 2));
+        assert_eq!(fold.page_count(), 4, "lanes are copies — slot count unchanged");
+        let sides = fold.sides();
+        assert_eq!(sides.len(), 1, "single-sided is one printed side");
+        // 4 panels × 2 lanes = 8 placements; lane 1 carries the same pages as lane 0.
+        let placements = &sides[0];
+        assert_eq!(placements.len(), 8);
+        for c in 0..4u32 {
+            let top = placements.iter().find(|p| p.row == 0 && p.col == c).unwrap();
+            let bot = placements.iter().find(|p| p.row == 1 && p.col == c).unwrap();
+            assert_eq!(top.page, c + 1);
+            assert_eq!(bot.page, c + 1, "both lanes are identical copies");
+        }
     }
 }

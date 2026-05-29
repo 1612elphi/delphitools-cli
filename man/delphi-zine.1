@@ -4,7 +4,7 @@
 .SH NAME
 zine \- Impose images into a single\-sheet folded\-zine layout (mini\-8 or accordion)
 .SH SYNOPSIS
-\fBzine\fR [\fB\-\-fold\fR] [\fB\-\-panels\fR] [\fB\-\-double\fR] [\fB\-\-paper\fR] [\fB\-\-dpi\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIIMAGES\fR] 
+\fBzine\fR [\fB\-\-fold\fR] [\fB\-\-panels\fR] [\fB\-\-double\fR] [\fB\-\-split\fR] [\fB\-\-paper\fR] [\fB\-\-dpi\fR] [\fB\-h\fR|\fB\-\-help\fR] [\fIIMAGES\fR] 
 .SH DESCRIPTION
 Impose images into a single\-sheet folded\-zine layout (mini\-8 or accordion)
 .SH OPTIONS
@@ -17,6 +17,9 @@ Panels for the accordion fold (4, 6, or 8). Ignored for mini8
 .TP
 \fB\-\-double\fR
 Accordion double\-sided (front pages 1..N, back N+1..2N; flip on short edge)
+.TP
+\fB\-\-split\fR
+Accordion two\-up: stack two identical copies of the strip per sheet (halves panel height; cut the sheet in half horizontally). Ignored for mini8
 .TP
 \fB\-\-paper\fR \fI<PAPER>\fR [default: a4]
 Output paper size (default: A4)

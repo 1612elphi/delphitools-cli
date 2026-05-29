@@ -401,6 +401,11 @@ pub enum Command {
         #[arg(long)]
         double: bool,
 
+        /// Accordion two-up: stack two identical copies of the strip per sheet
+        /// (halves panel height; cut the sheet in half horizontally). Ignored for mini8.
+        #[arg(long)]
+        split: bool,
+
         /// Output paper size (default: A4)
         #[arg(long, default_value = "a4")]
         paper: String,
